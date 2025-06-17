@@ -9,8 +9,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        app: {
+          gray: {
+            DEFAULT: "hsl(var(--gray))",
+            "100": "hsl(var(--gray-100))",
+            "200": "hsl(var(--gray-200))",
+          },
+          primary: {
+            DEFAULT: "hsl(var(--primary))",
+            dark: "hsl(var(--primary-dark))",
+          },
+          white: "hsl(var(--white))",
+          black: "hsl(var(--black))",
+          border: "hsl(var(--border))",
+        },
+      },
+      fontFamily: {
+        roboto: ["var(--font-roboto)", "sans-serif"],
       },
     },
   },
