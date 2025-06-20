@@ -21,6 +21,7 @@ const config: Config = {
             DEFAULT: "hsl(var(--primary))",
             dark: "hsl(var(--primary-dark))",
           },
+          secondary: "hsl(var(--secondary))",
           white: "hsl(var(--white))",
           black: "hsl(var(--black))",
           border: "hsl(var(--border))",

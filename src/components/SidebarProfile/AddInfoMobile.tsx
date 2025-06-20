@@ -12,7 +12,7 @@ export function AddInfoMobile() {
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger asChild>
-        <button className="flex flex-col items-center text-app-primary  focus:outline-none">
+        <button className="flex flex-col items-center text-app-primary  ">
           Informações Adicionais
           <ChevronUp
             className={`mt-1 transition-transform duration-300 ${
