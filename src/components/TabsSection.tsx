@@ -46,7 +46,7 @@ const TabsSection = () => {
             ref={repoTabRef}
             value="repositories"
             className={cn(
-              "relative flex items-center py-2 pl-2 font-normal  transition-colors duration-200 ease-in-out outline-none",
+              "relative flex flex-1 items-center py-2 font-normal  transition-colors duration-200 ease-in-out outline-none sm:pl-2 sm:flex-none",
               selectedTab === "repositories"
                 ? "text-app-black"
                 : "text-app-gray hover:text-app-black",
@@ -86,7 +86,7 @@ const TabsSection = () => {
             ref={starTabRef}
             value="starred"
             className={cn(
-              "relative flex items-center py-2 pl-2 font-normal  transition-colors duration-200 ease-in-out outline-none",
+              "relative flex flex-1 items-center py-2 pl-2 font-normal  transition-colors duration-200 ease-in-out outline-none sm:flex-none",
               selectedTab === "starred"
                 ? "text-app-black"
                 : "text-app-gray hover:text-app-black",

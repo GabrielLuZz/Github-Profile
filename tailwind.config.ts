@@ -30,6 +30,10 @@ const config: Config = {
       fontFamily: {
         roboto: ["var(--font-roboto)", "sans-serif"],
       },
+      backgroundImage: {
+        "app-gradient":
+          "linear-gradient(90deg, hsl(var(--primary-dark)) 0%, hsl(var(--primary)) 100%)",
+      },
     },
   },
   plugins: [],
