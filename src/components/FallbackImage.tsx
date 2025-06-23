@@ -15,6 +15,7 @@ export function FallbackImage({
           {...props}
           onError={() => setErroCarregamento(true)}
           className={className}
+          alt={props?.alt ?? ""}
         />
       ) : (
         <div

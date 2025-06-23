@@ -2,7 +2,7 @@
 import * as motion from "motion/react-client";
 import { AddInfo } from "./AddInfo";
 import { FallbackImage } from "../FallbackImage";
-import { Building2, MapPin, Link, Instagram, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { AddInfoMobile } from "./AddInfoMobile";
 import { useProfileStore } from "../../store/useProfileStore";
 import { useGitHubUser } from "../../hooks/useGitHub";
@@ -33,19 +33,11 @@ export const SidebarProfile = () => {
             marginBottom: "clamp(1rem, 1.5cqi, 1.5rem)",
           }}
         />
-        
+
         <div className="h-6 bg-app-gray-300 rounded animate-pulse mb-1 w-32" />
-        
+
         <div className="h-4 bg-app-gray-300 rounded animate-pulse mb-1 w-48" />
         <div className="h-4 bg-app-gray-300 rounded animate-pulse w-40" />
-        
-        <div className="sm:hidden">
-          <AddInfoMobile />
-        </div>
-
-        <div className="hidden sm:block w-full">
-          <AddInfo />
-        </div>
       </motion.aside>
     );
   }
@@ -81,7 +73,10 @@ export const SidebarProfile = () => {
         }}
       >
         <FallbackImage
-          src={user?.avatar_url || "https://avatars.githubusercontent.com/u/86882285?v=4"}
+          src={
+            user?.avatar_url ||
+            "https://avatars.githubusercontent.com/u/86882285?v=4"
+          }
           alt={`Avatar de ${user?.name || username}`}
           fill
           className="object-cover"

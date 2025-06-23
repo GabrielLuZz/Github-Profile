@@ -14,11 +14,13 @@ import {
 } from "lucide-react";
 
 interface AddInfoMobileProps {
-  user: GitHubUser;
+  user?: GitHubUser;
 }
 
 export function AddInfoMobile({ user }: AddInfoMobileProps) {
   const [open, setOpen] = useState(false);
+
+  if (!user) return null;
 
   const infos = [
     {

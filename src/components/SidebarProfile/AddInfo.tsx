@@ -8,10 +8,12 @@ import {
 } from "lucide-react";
 
 interface AddInfoProps {
-  user: GitHubUser;
+  user?: GitHubUser;
 }
 
 export const AddInfo = ({ user }: AddInfoProps) => {
+  if (!user) return null;
+
   const infos = [
     {
       icon: <Building size={16} className="text-app-primary" />,
