@@ -29,6 +29,7 @@ const FiltersBar = () => {
   const [modal, setModal] = useState<"type" | "language" | null>(null);
   const [openType, setOpenType] = useState(false);
   const [openLang, setOpenLang] = useState(false);
+  const [searchInput, setSearchInput] = useState(search);
 
   const handleModalClose = () => {
     setModal(null);
@@ -40,14 +41,25 @@ const FiltersBar = () => {
     (o) => o.value === language
   );
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setSearch(searchInput);
+    }
+  };
+
   return (
     <div className="w-full items-center flex flex-row-reverse gap-2 overflow-hidden bg-app-gray-300 py-3 px-2 rounded-lg sm:gap-4 sm:overflow-visible sm:flex-col-reverse sm:items-start lg:flex-row lg:items-center sm:bg-transparent sm:py-0 sm:px-0 sm:rounded-none">
       {/* Campo de busca com ícone de lupa */}
       <div className="relative sm:flex-1 sm:w-full lg:max-w-[27.75rem] sm:min-w-36">
         <input
           type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchInput}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
           placeholder="Search Here"
           className=" peer h-10 w-10 bg-transparent pl-10 pr-4 text-sm text-app-gray border-app-border transition-all duration-200 focus:w-[calc(100vw-5rem)] max-w-full focus:pl-10 focus:pr-4 focus:outline-none focus:border-b focus:placeholder-app-gray sm:hidden"
           tabIndex={0}
@@ -65,24 +77,25 @@ const FiltersBar = () => {
             <path
               d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
               className="stroke-app-primary sm:stroke-app-gray"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M21 21L16.65 16.65"
               className="stroke-app-primary sm:stroke-app-gray"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </span>
 
         <input
           type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchInput}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
           placeholder="Search Here"
           className="hidden w-full border-0 border-b border-app-border pr-4 py-2 pl-8 text-sm focus:outline-none focus:ring-0 bg-transparent text-app-gray transition-colors duration-200 sm:block"
           aria-label="Buscar repositórios"
