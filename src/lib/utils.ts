@@ -2,6 +2,9 @@ export function cn(...classes: (string | false | undefined | null)[]) {
   return classes.filter(Boolean).join(' ');
 }
 
+export const ITEMS_PER_PAGE = 10;
+export const DEFAULT_USERNAME = "GabrielLuZz";
+
 export type Repository = {
   id: number;
   name: string;
@@ -23,7 +26,7 @@ export const getFiltered = (
   const searchLower = search.toLowerCase();
   return data.filter((repo) => {
     const matchesType = repoType === 'all' || repo.type === repoType;
-    const matchesLang = language === 'all' || repo.language === language;
+    const matchesLang = language === 'all' || repo.language.toLowerCase() === language.toLowerCase();
     const matchesSearch =
       repo.name.toLowerCase().includes(searchLower) ||
       repo.description.toLowerCase().includes(searchLower) ||

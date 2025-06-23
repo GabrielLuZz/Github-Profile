@@ -1,52 +1,48 @@
 "use client";
-import StarredRepositoryCard from "./StarredRepositoryCard";
+import RepositoryCard from "./RepositoryCard";
+import RepositorySkeletonList from "./RepositorySkeletonList";
 import { useProfileStore } from "../store/useProfileStore";
-import { AnimatePresence, motion, LayoutGroup } from "framer-motion";
-import { getFiltered, Repository } from "../lib/utils";
-
-const mockStarred: Repository[] = [
-  {
-    id: 101,
-    name: "Chamber 5.6.2 / Smite and Ignite",
-    description: "Node.js Foundation Release Working Group.",
-    type: "sources",
-    language: "c++",
-    stars: 526,
-    forks: 0,
-    url: "#",
-    highlight: "Smite and Ignite",
-  },
-  {
-    id: 102,
-    name: "BNB / Vandal",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    type: "forks",
-    language: "python",
-    stars: 0,
-    forks: 0,
-    url: "#",
-    highlight: "Vandal",
-  },
-  {
-    id: 103,
-    name: "Ilikatsri / Operator",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis vel etiam tellus velit pellentesque ut risus.",
-    type: "sources",
-    language: "javascript",
-    stars: 312,
-    forks: 0,
-    url: "#",
-    highlight: "Operator",
-  },
-];
+import { useGitHubStarredTransformed } from "../hooks/useGitHub";
+import { AnimatePresence, motion, LayoutGroup } from "motion/react";
+import { getFiltered, ITEMS_PER_PAGE } from "../lib/utils";
+import { useEffect } from "react";
 
 const StarredRepositoryList = () => {
+  const username = useProfileStore((s) => s.username);
   const search = useProfileStore((s) => s.search);
   const repoType = useProfileStore((s) => s.repoType);
   const language = useProfileStore((s) => s.language);
+  const currentPage = useProfileStore((s) => s.currentPage);
+  const setHasNextPage = useProfileStore((s) => s.setHasNextPage);
 
-  const filtered = getFiltered(mockStarred, repoType, language, search);
+  const {
+    data: starred = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useGitHubStarredTransformed(username, currentPage);
+
+  useEffect(() => {
+    setHasNextPage(starred.length === ITEMS_PER_PAGE);
+  }, [starred.length, setHasNextPage]);
+
+  const filtered = getFiltered(starred, repoType, language, search);
+
+  if (error) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-red-500 text-center py-8"
+      >
+        Erro ao carregar repositórios starred: {error.message}
+      </motion.div>
+    );
+  }
+
+  if (isLoading) {
+    return <RepositorySkeletonList count={6} />;
+  }
 
   return (
     <LayoutGroup>
@@ -57,24 +53,39 @@ const StarredRepositoryList = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="text-zinc-400 text-sm"
+            className="text-app-gray text-sm"
             layout
           >
-            Nenhum repositório encontrado.
+            {search || repoType !== 'all' || language !== 'all' 
+              ? "Nenhum repositório starred encontrado com os filtros aplicados."
+              : "Nenhum repositório starred encontrado."
+            }
           </motion.span>
         ) : (
-          filtered.map((repo) => (
-            <motion.div
-              key={repo.id}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 24 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              layout
-            >
-              <StarredRepositoryCard repo={repo} />
-            </motion.div>
-          ))
+          <>
+            {filtered.map((repo) => (
+              <motion.div
+                key={repo.id}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 24 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                layout
+              >
+                <RepositoryCard repo={repo} />
+              </motion.div>
+            ))}
+            
+            {isFetching && !isLoading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-app-gray text-sm text-center py-4"
+              >
+                Atualizando...
+              </motion.div>
+            )}
+          </>
         )}
       </AnimatePresence>
     </LayoutGroup>

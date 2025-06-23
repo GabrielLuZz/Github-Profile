@@ -1,52 +1,48 @@
 "use client";
 import RepositoryCard from "./RepositoryCard";
+import RepositorySkeletonList from "./RepositorySkeletonList";
 import { useProfileStore } from "../store/useProfileStore";
-import { AnimatePresence, motion, LayoutGroup } from "framer-motion";
-import { getFiltered, Repository } from "../lib/utils";
-
-const mockRepositories: Repository[] = [
-  {
-    id: 1,
-    name: "Node / Release",
-    description: "Node.js Foundation Release Working Group.",
-    type: "sources",
-    language: "javascript",
-    stars: 1569,
-    forks: 142,
-    url: "#",
-    highlight: "Release",
-  },
-  {
-    id: 2,
-    name: "Cordeiro / Angular Choosen",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    type: "sources",
-    language: "typescript",
-    stars: 726,
-    forks: 91,
-    url: "#",
-    highlight: "Angular Choosen",
-  },
-  {
-    id: 3,
-    name: "Teste / App Release 1.03",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis vel etiam tellus velit pellentesque scelerisque ut risus.",
-    type: "forks",
-    language: "python",
-    stars: 9327,
-    forks: 562,
-    url: "#",
-    highlight: "App Release 1.03",
-  },
-];
+import { useGitHubRepositoriesTransformed } from "../hooks/useGitHub";
+import { AnimatePresence, motion, LayoutGroup } from "motion/react";
+import { getFiltered, ITEMS_PER_PAGE } from "../lib/utils";
+import { useEffect } from "react";
 
 const RepositoryList = () => {
+  const username = useProfileStore((s) => s.username);
   const search = useProfileStore((s) => s.search);
   const repoType = useProfileStore((s) => s.repoType);
   const language = useProfileStore((s) => s.language);
+  const currentPage = useProfileStore((s) => s.currentPage);
+  const setHasNextPage = useProfileStore((s) => s.setHasNextPage);
 
-  const filtered = getFiltered(mockRepositories, repoType, language, search);
+  const {
+    data: repositories = [],
+    isLoading,
+    error,
+    isFetching,
+  } = useGitHubRepositoriesTransformed(username, currentPage);
+
+  useEffect(() => {
+    setHasNextPage(repositories.length === ITEMS_PER_PAGE);
+  }, [repositories.length, setHasNextPage]);
+
+  const filtered = getFiltered(repositories, repoType, language, search);
+
+  if (error) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-red-500 text-center py-8"
+      >
+        Erro ao carregar repositórios: {error.message}
+      </motion.div>
+    );
+  }
+
+  if (isLoading) {
+    return <RepositorySkeletonList count={6} />;
+  }
 
   return (
     <LayoutGroup>
@@ -60,21 +56,36 @@ const RepositoryList = () => {
             className="text-app-gray text-sm"
             layout
           >
-            Nenhum repositório encontrado.
+            {search || repoType !== 'all' || language !== 'all' 
+              ? "Nenhum repositório encontrado com os filtros aplicados."
+              : "Nenhum repositório encontrado."
+            }
           </motion.span>
         ) : (
-          filtered.map((repo) => (
-            <motion.div
-              key={repo.id}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 24 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              layout
-            >
-              <RepositoryCard repo={repo} />
-            </motion.div>
-          ))
+          <>
+            {filtered.map((repo) => (
+              <motion.div
+                key={repo.id}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 24 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                layout
+              >
+                <RepositoryCard repo={repo} />
+              </motion.div>
+            ))}
+            
+            {isFetching && !isLoading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-app-gray text-sm text-center py-4"
+              >
+                Atualizando...
+              </motion.div>
+            )}
+          </>
         )}
       </AnimatePresence>
     </LayoutGroup>

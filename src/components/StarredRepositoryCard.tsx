@@ -9,6 +9,8 @@ const StarredRepositoryCard = ({ repo }: { repo: Repository }) => (
       <span className="text-app-black">/</span>
       <a
         href={repo.url}
+        target="_blank"
+        rel="noopener noreferrer"
         className="text-app-primary font-normal text-base hover:underline focus:underline outline-none"
         tabIndex={0}
         aria-label={`Ver destaque ${repo.highlight}`}

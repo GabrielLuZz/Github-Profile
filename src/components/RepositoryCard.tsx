@@ -6,11 +6,13 @@ const RepositoryCard = ({ repo }: { repo: Repository }) => (
   <article className="bg-transparent flex flex-col gap-2 transition-all duration-300 ease-in-out">
     <div className="flex items-center gap-2">
       <span className="font-light text-app-black text-base">
-        {repo.name.split(" / ")[0]}
+        {repo.name}
       </span>
       <span className="text-app-black">/</span>
       <a
         href={repo.url}
+        target="_blank"
+        rel="noopener noreferrer"
         className="text-app-primary font-semibold text-sm hover:underline focus:underline outline-none"
         tabIndex={0}
         aria-label={`Ver destaque ${repo.highlight}`}

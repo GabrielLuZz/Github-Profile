@@ -10,7 +10,7 @@ export default function Home() {
     >
       <SidebarProfile />
       <motion.section
-        className="flex-1"
+        className="flex-1 sm:overflow-hidden"
         initial={{ opacity: 0, x: 24 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
